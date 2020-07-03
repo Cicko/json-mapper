@@ -1,7 +1,7 @@
 # JSON Mapper
 A simple tool that allows you, without coding, filter and extract data from within a json object.
 
-[Try it Online](json-mapper.surge.sh)
+[Try it Online](http://json-mapper.surge.sh)
 
 
 ## Ideas to improve it
