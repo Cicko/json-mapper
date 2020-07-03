@@ -1,9 +1,7 @@
 import React from 'react';
 import Editor from 'react-simple-code-editor';
-import dedent from 'dedent';
 import { highlight, languages } from 'prismjs/components/prism-core';
-import { SocialIcon } from 'react-social-icons';
-import { FaTree, FaHeart, FaCopyright, FaEdit, FaStar, FaCoffee, FaDownload } from 'react-icons/fa';
+import { FaHeart, FaDownload } from 'react-icons/fa';
 import JSONTree from 'react-json-tree'
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
@@ -27,11 +25,13 @@ class App extends React.Component {
     warningMessage: '',
   };
 
+  componentDidMount() {
+    this.computeResult();
+  }
+
   onInputChange = (e) => {
     const val = e.target.value;
     this.setState({ input: val })
-
-    // this.computeResult();
   };
 
   computeResult = () => {
@@ -160,6 +160,7 @@ class App extends React.Component {
                     placeholder="Result will be here…"
                     value={this.state.result}
                     highlight={code => highlight(code, languages.json)}
+                    onValueChange={() => {}}
                     padding={20}
                     className="container__editor"
                 />
