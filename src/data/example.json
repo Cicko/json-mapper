@@ -1,0 +1,70 @@
+{
+	"type":"Homo Sapiens",
+	"personalInfo":{
+	  "name":"Rudolf",
+	  "surname": "Cicko",
+	  "profession": [
+		"JavaScript Software Engineer",
+		"Pianist",
+		"Failed YouTuber"
+	  ],
+	  "birthPlace": "Arona, Tenerife",
+	  "birthDate": "23-08-1994"
+	},
+	"pets": [
+	  {
+		"type": "Mouse",
+		"name": "Jerry"
+	  },
+	  {
+		"type": "Ogre",
+		"name": "Shrek"
+	  },
+	  {
+		"type": "Dog",
+		"name": "Rex"
+	  }
+	],
+	"interests": [
+	  "3D Modelling",
+	  "Game Development",
+	  "memes",
+	  "Shrek",
+	  "Inmortality",
+	  "Chopin",
+	  "Rachmaninoff",
+	  "Prokofiev"
+	],
+	"social networks": {
+	  "instagram": {
+		"username": "rcicko_music"
+	  },
+	  "github": {
+		"username": "cicko"
+	  },
+	  "twitter": {
+		"username": "rudolfcicko2"
+	  }
+	},
+	"nestedObject": {
+	  "a": {
+		"b": {
+		  "c": {
+			"array": [
+			  {
+				"d": {
+				  "e": true
+				}
+			  },
+			  {
+				"d": {
+				  "e": false
+				}
+			  }
+			]
+		  }
+		}
+	  }
+	}
+  }
+  
