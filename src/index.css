@@ -128,14 +128,18 @@ body {
 .namespace {
   opacity: 0.7;
 }
+
+.token.boolean {
+  color: #4285F4;
+}
+
 .token.property,
 .token.tag,
-.token.boolean,
 .token.number,
 .token.constant,
 .token.symbol,
 .token.deleted {
-  color: #e91e63;
+  color: #9c27b0;
 }
 .token.selector,
 .token.attr-name,
@@ -143,7 +147,7 @@ body {
 .token.char,
 .token.builtin,
 .token.inserted {
-  color: #4caf50;
+  color: #0F9D58;
 }
 .token.operator,
 .token.entity,
@@ -158,7 +162,7 @@ body {
   color: #3f51b5;
 }
 .token.function {
-  color: #f44336;
+  color: #DB4437;
 }
 .token.regex,
 .token.important,
