@@ -31,8 +31,6 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  overflow: hidden;
-  height: 100%;
   
 }
 
@@ -46,7 +44,9 @@ body {
 .container__footer {
   width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
   padding-left: 10px;
 }
 
@@ -61,6 +61,12 @@ body {
   overflow: auto;
   margin: 1.67em 0;
   min-width: 50%;
+}
+
+.container_editor_tools {
+  display: flex;
+  background-color:  #fafafa;
+  padding: 10px;
 }
 
 .container_editor_area::-webkit-scrollbar-track {
@@ -167,4 +173,22 @@ body {
 .warning {
   color: #F4B400;
   margin: 10px;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: black;
+}
+
+svg {
+  cursor: pointer;
+}
+
+.invite-coffee {
+  width: 98%;
+  display: flex;
+  justify-content: flex-end;
 }
