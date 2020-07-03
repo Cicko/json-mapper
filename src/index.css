@@ -53,6 +53,10 @@ body {
     margin: 1.67em 0;
     min-width: 50%;
   }
+
+  .footer_first-phrase {
+    margin-bottom: 30px;
+  }
 }
 
 @media only screen and (min-width: 600px) {
