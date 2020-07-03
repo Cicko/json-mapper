@@ -22,7 +22,6 @@ body {
   line-height: 1.5;
   margin: 0;
   padding: 0;
-  overflow: hidden;
 }
 
 /* App */
@@ -41,6 +40,15 @@ body {
     padding-left: 10px;
     padding-right: 20px;
   }
+  .container_wrapper {
+    display: flex;
+    justify-content: normal;
+    flex-direction: column;
+  }
+
+  .container_editor_area {
+    max-height: 200px;
+  }
 }
 
 @media only screen and (min-width: 600px) {
@@ -49,21 +57,12 @@ body {
     text-align: center;
     padding-left: 10px;
     padding-right: 20px;
+    flex-direction: column;
   }
-}
-
-.container__footer {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding-left: 10px;
-}
-
-.container_wrapper {
-  display: flex;
-  justify-content: normal;
+  .container_wrapper {
+    display: flex;
+    justify-content: normal;
+  }
 }
 
 .container_editor_area {
@@ -101,6 +100,10 @@ body {
 
 .container__editor textarea {
   outline: 0;
+}
+
+.container_result_tools {
+  padding: 10px;
 }
 
 .button {
@@ -194,21 +197,49 @@ p {
   margin: 0;
 }
 
+h1 {
+  margin-bottom: 0px;
+}
+
 a {
   color: black;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 svg {
   cursor: pointer;
 }
 
-.invite-coffee {
-  width: 98%;
-  display: flex;
-  justify-content: flex-end;
+#coffee {
+  font-size: 20px;
 }
 
 input {
+  margin-top: 20px;
   font-family: "Fira code","Fira Mono",Consolas,Menlo,Courier,monospace;
-  background-color: #fafafa;
+}
+
+
+.container__footer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-left: 10px;
+}
+
+.footer__copyright {
+  display: flex;
+  align-items: center;
+}
+
+footer {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
 }
