@@ -34,11 +34,22 @@ body {
   
 }
 
-.container__content {
-  width: 100%;
-  text-align: center;
-  padding-left: 10px;
-  padding-right: 20px;
+@media only screen and (max-width: 600px) {
+  .container__content {
+    width: 100%;
+    text-align: center;
+    padding-left: 10px;
+    padding-right: 20px;
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .container__content {
+    width: 100%;
+    text-align: center;
+    padding-left: 10px;
+    padding-right: 20px;
+  }
 }
 
 .container__footer {
@@ -191,4 +202,9 @@ svg {
   width: 98%;
   display: flex;
   justify-content: flex-end;
+}
+
+input {
+  font-family: "Fira code","Fira Mono",Consolas,Menlo,Courier,monospace;
+  background-color: #fafafa;
 }
