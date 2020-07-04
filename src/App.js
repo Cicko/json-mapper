@@ -192,7 +192,6 @@ class App extends React.Component {
               <FaHeart style={{ color: '#DB4437'}} />
               &nbsp;by&nbsp;Rudolf Cicko&nbsp;©&nbsp;2020</a>
             </div>
-            {this.renderInviteMeACoffee()}
             </footer>
           </div>
         </main>
