@@ -53,8 +53,19 @@ class App extends React.Component {
 
     keys.forEach(key => {
       try {
-        if (!result && code[key]) {
-          result = code[key];
+        if (!result && (code[key] || code.length)) {
+
+          if (code.length) {
+            result = code.map(item => {
+              if (!item[key]) {
+                warningMessage = `'${key}' key inside ${JSON.stringify(item)} doesn't exist`;
+                return item;
+              }
+              return item[key]
+            });
+          } else {
+            result = code[key];
+          }
         } else if (result.length && typeof result !== 'string') { // If it's an array
           result = result.map(item => {
             if (!item[key]) {
