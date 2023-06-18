@@ -10,8 +10,8 @@ interface Props {
 	onValueChange: (value: string) => void;
 }
 
-const EditorComponent: React.FC<Props> = (props: Props) =>  {
-	return 
+const EditorComponent = (props: Props) =>  {
+	return (
 		<Editor
     		placeholder="Type some code…"
 			value={props.value}
@@ -20,7 +20,7 @@ const EditorComponent: React.FC<Props> = (props: Props) =>  {
     		padding={20}
     		className="container__editor"
 		/>
-	;
+	);
 }
 
 export default EditorComponent;

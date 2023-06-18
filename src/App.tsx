@@ -1,4 +1,5 @@
-import React from 'react';
+// @ts-nocheck
+import React, {AnchorHTMLAttributes, ChangeEvent, ChangeEventHandler} from 'react';
 import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import { FaHeart, FaDownload } from 'react-icons/fa';
@@ -7,17 +8,31 @@ import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-json';
 import 'prismjs/components/prism-markup';
-import sampleInput from './data/example';
+import sampleInput from './data/example.json';
 import './index.css';
 
 // import doesn't seem to work properly with parcel for jsx
 require('prismjs/components/prism-jsx');
 
+type JSONValue =
+    | string
+    | number
+    | boolean
+    | JSONObject
+    | JSONArray;
+
+interface JSONArray extends Array<JSONValue> { }
+
+interface JSONObject {
+  [x: string]: JSONValue;
+}
+
+type TResult = JSONValue | JSONObject
 
 class App extends React.Component {
   state = {
-    code: JSON.stringify(sampleInput, null, '\t'),
-    parsedInput: sampleInput,
+    stringifiedCode: JSON.stringify(sampleInput, null, '\t'),
+    jsonCode: sampleInput,
     viewMode: 'edit',
     result: '',
     input: 'pets.type',
@@ -29,43 +44,24 @@ class App extends React.Component {
     this.computeResult();
   }
 
-  onInputChange = (e) => {
+  onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     this.setState({ input: val })
   };
 
   computeResult = () => {
-    const val = this.state.input;
+    const filter = this.state.input;
     let warningMessage = null;
     let errorMessage = null;
-    let code;
-    try {
-      if (!this.state.parsedCode) {
-        code = JSON.parse(this.state.code);
-      } else {
-        code = this.state.parsedCode;
-      }
-    } catch(e) {
-      errorMessage = `Error in the Input: ${e.message}`
-    }
-    const keys = val.includes('.') ? val.split('.') : [val];
-    let result = null;
 
-    keys.forEach(key => {
+    let code: TResult = this.state.jsonCode;
+    const path: string[] = filter.includes('.') ? filter.split('.') : [filter];
+    let result: TResult = {};
+
+    path.forEach((key: string) => {
       try {
-        if (!result && (code[key] || code.length)) {
-
-          if (code.length) {
-            result = code.map(item => {
-              if (!item[key]) {
-                warningMessage = `'${key}' key inside ${JSON.stringify(item)} doesn't exist`;
-                return item;
-              }
-              return item[key]
-            });
-          } else {
+        if (Object.keys(result).length === 0 && code[key]) {
             result = code[key];
-          }
         } else if (result.length && typeof result !== 'string') { // If it's an array
           result = result.map(item => {
             if (!item[key]) {
@@ -77,7 +73,10 @@ class App extends React.Component {
         } else if (result[key]) {
           result = result[key];
         } else {
-          warningMessage = `'${key}' key inside ${JSON.stringify(result)} doesn't exist`;
+          warningMessage = `'${key}' key doesn't exist`;
+          if (key.includes("\"")) {
+            warningMessage += '. Try remove the " symbols.'
+          }
         }
       } catch(e) {
         if (e.message === 'Cannot read property \'length\' of null') {
@@ -105,10 +104,11 @@ class App extends React.Component {
 
   renderEditMode = () => {
     return <Editor
-    placeholder="Type some code…"
-    value={this.state.code}
-    onValueChange={code => {
-      this.setState({ code });
+    placeholder="Type some code bro"
+    value={this.state.stringifiedCode}
+    onValueChange={stringifiedCode => {
+      this.setState({ stringifiedCode });
+      this.setState({ jsonCode: JSON.parse(stringifiedCode)})
     }}
     highlight={code => highlight(code, languages.json)}
     padding={20}
@@ -117,7 +117,7 @@ class App extends React.Component {
   }
 
   renderTreeMode = () => {
-    return <JSONTree data={this.state.parsedInput} />;
+    return <JSONTree data={this.state.jsonCode} />;
   }
 
   renderInputByMode = () => {
@@ -177,7 +177,12 @@ class App extends React.Component {
                 />
                 {this.state.result && <div className="container_result_tools">
                   <FaDownload title="Download result in json file" onClick={() => {
-                    alert('Coming soon...')
+                    const anchor = document.createElement('a');
+                    anchor.href = `data:application/json;charset=utf-8;base64,${btoa(this.state.result)}`
+                    anchor.download = 'result.json'
+                    document.body.appendChild(anchor);
+                    anchor.click()
+                    document.body.removeChild(anchor);
                   }}/>
                 </div>}
               </div>
