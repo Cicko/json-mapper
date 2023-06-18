@@ -36,6 +36,7 @@ class App extends React.Component {
     viewMode: 'edit',
     result: '',
     input: 'pets.type',
+    path: [],
     errorMessage: '',
     warningMessage: '',
   };
@@ -44,12 +45,15 @@ class App extends React.Component {
     this.computeResult();
   }
 
-  onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  onInputChange = async (e: ChangeEvent<HTMLInputElement>, compute: boolean) => {
     const val = e.target.value;
-    this.setState({ input: val })
+    await this.setState({ input: val, path: [val] })
+    if (compute) {
+      this.computeResult()
+    }
   };
 
-  computeResult = () => {
+  computeResult = async () => {
     const filter = this.state.input;
     let warningMessage = null;
     let errorMessage = null;
@@ -94,7 +98,7 @@ class App extends React.Component {
     // code.modified = true;
 
 
-    this.setState({ 
+    await this.setState({
       result: JSON.stringify(result, null, '\t'), 
       parsedInput: code, 
       warningMessage,
@@ -128,6 +132,25 @@ class App extends React.Component {
     }
   }
 
+  renderSubKeys = () => {
+    const parsed = JSON.parse(this.state.result)
+    let subKeys = typeof parsed[0] !== 'string'
+        ? typeof parsed[0] !== 'object' ? Object.keys(parsed) : Object.keys(parsed[0])
+        : null
+    if (subKeys) {
+      return <select onChange={async (e) => {
+        const val = e.target.value;
+        const path = this.state.input.concat('.').concat(val)
+        await this.setState({ input: path, path: [...this.state.path, val]})
+        console.log(this.state.path)
+        await this.computeResult()
+      }}>
+        {subKeys.map(key => <option value={key}>{key}</option>)}
+      </select>
+    }
+  }
+
+
   renderInviteMeACoffee = () => 
     <a href="https://www.buymeacoffee.com/rudolfcicko" target="_blank">
       <img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" 
@@ -138,13 +161,14 @@ class App extends React.Component {
     return (
         <main className="container">
           <div className="container__content">
-            <h1>JSON Mapper</h1>
+            <h1>JSON Extractor</h1>
             <p>Easy way to extract the data you want from your json object.</p>
-            <input value={this.state.input} onChange={this.onInputChange} onKeyDown={(e) => {
-              if (e.keyCode === 13) {
-                this.computeResult();
-              }
-            }}/>
+            <select onChange={(e) => {
+              this.onInputChange(e, true)
+            }}>
+              {Object.keys(this.state.jsonCode).map(key => <option value={key}>{key}</option>)}
+            </select>
+            {this.state.result && this.renderSubKeys()}
             <button onClick={this.computeResult}> Generate result </button>
             {this.state.errorMessage &&
               <div className="error">
@@ -167,6 +191,7 @@ class App extends React.Component {
                 {this.renderInputByMode()}
               </div>
               <div className="container_editor_area">
+                <h2>Result</h2>
                 <Editor
                     placeholder="Result will be here…"
                     value={this.state.result}
@@ -175,18 +200,18 @@ class App extends React.Component {
                     padding={20}
                     className="container__editor"
                 />
-                {this.state.result && <div className="container_result_tools">
-                  <FaDownload title="Download result in json file" onClick={() => {
-                    const anchor = document.createElement('a');
-                    anchor.href = `data:application/json;charset=utf-8;base64,${btoa(this.state.result)}`
-                    anchor.download = 'result.json'
-                    document.body.appendChild(anchor);
-                    anchor.click()
-                    document.body.removeChild(anchor);
-                  }}/>
-                </div>}
               </div>
             </div>
+            {this.state.result && <div className="container_result_tools">
+              <FaDownload title="Download result in json file" onClick={() => {
+                const anchor = document.createElement('a');
+                anchor.href = `data:application/json;charset=utf-8;base64,${btoa(this.state.result)}`
+                anchor.download = 'result.json'
+                document.body.appendChild(anchor);
+                anchor.click()
+                document.body.removeChild(anchor);
+              }}/>
+            </div>}
           </div>
           <div className="container__footer" style={{ position: "absolute", bottom: 0, margin: 20 }}>
             <div className="footer_first-phrase">
