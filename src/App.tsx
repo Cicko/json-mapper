@@ -188,7 +188,7 @@ class App extends React.Component {
               </div>
             </div>
           </div>
-          <div className="container__footer">
+          <div className="container__footer" style={{ position: "absolute", bottom: 0, margin: 20 }}>
             <div className="footer_first-phrase">
               <p>
                 Let me know if you like this tool to continue working on it.&nbsp; 
@@ -206,7 +206,7 @@ class App extends React.Component {
             <a target="_blank" href="https://github.com/Cicko">
               Created with&nbsp;
               <FaHeart style={{ color: '#DB4437'}} />
-              &nbsp;by&nbsp;Rudolf Cicko&nbsp;©&nbsp;2020</a>
+              &nbsp;by&nbsp;Rudolf Cicko&nbsp;©&nbsp;2023</a>
             </div>
             </footer>
           </div>
