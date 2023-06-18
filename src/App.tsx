@@ -34,8 +34,8 @@ class App extends React.Component {
     stringifiedCode: JSON.stringify(sampleInput, null, '\t'),
     jsonCode: sampleInput,
     viewMode: 'edit',
+    url: '',
     result: '',
-    input: 'pets.type',
     path: [],
     errorMessage: '',
     warningMessage: '',
@@ -54,33 +54,22 @@ class App extends React.Component {
   };
 
   computeResult = async () => {
-    const filter = this.state.input;
     let warningMessage = null;
     let errorMessage = null;
 
     let code: TResult = this.state.jsonCode;
-    const path: string[] = filter.includes('.') ? filter.split('.') : [filter];
     let result: TResult = {};
 
-    path.forEach((key: string) => {
+    this.state.path.forEach((key: string) => {
       try {
         if (Object.keys(result).length === 0 && code[key]) {
             result = code[key];
         } else if (result.length && typeof result !== 'string') { // If it's an array
           result = result.map(item => {
-            if (!item[key]) {
-              warningMessage = `'${key}' key inside ${JSON.stringify(item)} doesn't exist`;
-              return item;
-            }
             return item[key]
           });
         } else if (result[key]) {
           result = result[key];
-        } else {
-          warningMessage = `'${key}' key doesn't exist`;
-          if (key.includes("\"")) {
-            warningMessage += '. Try remove the " symbols.'
-          }
         }
       } catch(e) {
         if (e.message === 'Cannot read property \'length\' of null') {
@@ -133,21 +122,27 @@ class App extends React.Component {
   }
 
   renderSubKeys = () => {
-    const parsed = JSON.parse(this.state.result)
-    let subKeys = typeof parsed[0] !== 'string'
-        ? typeof parsed[0] !== 'object' ? Object.keys(parsed) : Object.keys(parsed[0])
-        : null
-    if (subKeys) {
-      return <select onChange={async (e) => {
-        const val = e.target.value;
-        const path = this.state.input.concat('.').concat(val)
-        await this.setState({ input: path, path: [...this.state.path, val]})
-        console.log(this.state.path)
-        await this.computeResult()
-      }}>
-        {subKeys.map(key => <option value={key}>{key}</option>)}
-      </select>
-    }
+    let acc = this.state.jsonCode
+    return this.state.path.map((key, index, arr) => {
+      acc = acc[key]
+      const parsed = acc
+      let subKeys = parsed && typeof parsed[0] !== 'string'
+          ? typeof parsed[0] !== 'object' ? Object.keys(parsed) : Object.keys(parsed[0])
+          : null
+      if (subKeys) {
+        return <select onChange={async (e) => {
+          const val = e.target.value;
+          await this.setState({
+            path: index < arr.length - 1 ? [...arr.slice(0, index + 1), val] : [...this.state.path, val]
+          })
+          console.log(this.state.path)
+          await this.computeResult()
+        }}>
+          <option value={null}> </option>
+          {subKeys.map(key => <option value={key}>{key}</option>)}
+        </select>
+      }
+    })
   }
 
 
@@ -169,7 +164,6 @@ class App extends React.Component {
               {Object.keys(this.state.jsonCode).map(key => <option value={key}>{key}</option>)}
             </select>
             {this.state.result && this.renderSubKeys()}
-            <button onClick={this.computeResult}> Generate result </button>
             {this.state.errorMessage &&
               <div className="error">
                 {this.state.errorMessage}
@@ -188,6 +182,29 @@ class App extends React.Component {
                   <FaTree style={{ color: '#9e9e9e' }} title="tree view" onClick={() => this.setState({ viewMode: 'tree'})}/>
                 </div>
                 */}
+                <label>URL </label>
+                <input onChange={(e) => {
+                  const val = e.target.value
+                  this.setState({ url: val })
+                }}></input>
+                {' '}<button onClick={async () => {
+                try {
+                  console.log(this.state.url)
+                  const res = await fetch(this.state.url, {
+                    mode: 'no-cors',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    }
+                  })
+                  console.log(res)
+                  const json = await res.json()
+                  console.log(json)
+                } catch(e) {
+                  console.log('bro error')
+                  console.error(e)
+                }
+
+              }}>Fetch</button>
                 {this.renderInputByMode()}
               </div>
               <div className="container_editor_area">

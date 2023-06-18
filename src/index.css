@@ -251,3 +251,7 @@ footer {
   width: 100%;
   justify-content: space-between;
 }
+
+select {
+  margin: 5px;
+}
